@@ -37,6 +37,17 @@ public class BlockAdvPatternMatrix extends BlockContainer {
     }
 
     @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, net.minecraft.entity.EntityLivingBase placer,
+        net.minecraft.item.ItemStack stack) {
+        if (!world.isRemote && placer instanceof EntityPlayer) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te instanceof TileAdvPatternMatrix) {
+                ((TileAdvPatternMatrix) te).onPlacedBy((EntityPlayer) placer);
+            }
+        }
+    }
+
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
         float hitY, float hitZ) {
         return false;
