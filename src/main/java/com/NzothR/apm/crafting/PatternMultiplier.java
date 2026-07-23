@@ -1,0 +1,59 @@
+package com.NzothR.apm.crafting;
+
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.storage.data.IAEItemStack;
+
+/**
+ * 倍率计算工具。
+ */
+public final class PatternMultiplier {
+
+    public static final long HARD_CAP = Integer.MAX_VALUE;
+
+    private PatternMultiplier() {}
+
+    public static long compute(ICraftingPatternDetails pattern, long requestAmount, long outputAmount) {
+        if (outputAmount <= 0 || requestAmount <= 0) {
+            return 1;
+        }
+
+        long idealMultiplier = ceilDiv(requestAmount, outputAmount);
+        long maxSafeMultiplier = computeMaxSafeMultiplier(pattern);
+        long effective = Math.min(idealMultiplier, maxSafeMultiplier);
+
+        return Math.max(1, effective);
+    }
+
+    public static long computeMaxSafeMultiplier(ICraftingPatternDetails pattern) {
+        long maxSafe = HARD_CAP;
+
+        IAEItemStack[] inputs = pattern.getCondensedInputs();
+        if (inputs != null) {
+            for (IAEItemStack stack : inputs) {
+                if (stack == null) continue;
+                long baseAmount = stack.getStackSize();
+                if (baseAmount <= 0) continue;
+                long allowed = HARD_CAP / baseAmount;
+                maxSafe = Math.min(maxSafe, allowed);
+            }
+        }
+
+        IAEItemStack[] outputs = pattern.getCondensedOutputs();
+        if (outputs != null) {
+            for (IAEItemStack stack : outputs) {
+                if (stack == null) continue;
+                long baseAmount = stack.getStackSize();
+                if (baseAmount <= 0) continue;
+                long allowed = HARD_CAP / baseAmount;
+                maxSafe = Math.min(maxSafe, allowed);
+            }
+        }
+
+        return Math.max(1, maxSafe);
+    }
+
+    public static long ceilDiv(long a, long b) {
+        if (b <= 0) throw new ArithmeticException("division by zero or negative");
+        return a / b + (a % b != 0 ? 1 : 0);
+    }
+}

@@ -1,0 +1,5 @@
+tile.apm.adv_pattern_matrix.name=Advanced Pattern Optimization Matrix
+
+tooltip.apm.adv_pattern_matrix.line1=Connects to ME network to
+tooltip.apm.adv_pattern_matrix.line2=automatically scale processing patterns
+tooltip.apm.adv_pattern_matrix.line3=during crafting calculations.

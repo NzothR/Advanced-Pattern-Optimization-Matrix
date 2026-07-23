@@ -1,0 +1,5 @@
+tile.apm.adv_pattern_matrix.name=高级样板优化矩阵
+
+tooltip.apm.adv_pattern_matrix.line1=连接到 ME 网络
+tooltip.apm.adv_pattern_matrix.line2=自动在处理样板合成计算时
+tooltip.apm.adv_pattern_matrix.line3=放大输入输出量

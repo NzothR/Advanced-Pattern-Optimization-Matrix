@@ -1,0 +1,21 @@
+{
+    "modListVersion": 2,
+    "modList": [{
+        "modid": "${modId}",
+        "name": "${modName}",
+        "description": "Automatic pattern doubling for AE2 crafting. Connect the Advanced Pattern Matrix to your ME network to enable automatic pattern scaling during crafting calculations.",
+        "version": "${modVersion}",
+        "mcversion": "${minecraftVersion}",
+        "url": "",
+        "updateUrl": "",
+        "authorList": ["YourName"],
+        "credits": "Inspired by ExtendedAE_Plus (EAEP)",
+        "logoFile": "",
+        "screenshots": [],
+        "parent": "",
+        "requiredMods": ["appliedenergistics2"],
+        "dependencies": ["appliedenergistics2"],
+        "dependants": [],
+        "useDependencyInformation": false
+    }]
+}
