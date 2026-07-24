@@ -17,11 +17,38 @@ public final class PatternMultiplier {
             return 1;
         }
 
+        // Fluid patterns have zero-size placeholder stacks. 0 * mul = 0 causes
+        // / by zero in AE2's calculateOneStep — skip scaling entirely.
+        if (hasZeroSizeStacks(pattern)) {
+            return 1;
+        }
+
         long idealMultiplier = ceilDiv(requestAmount, outputAmount);
         long maxSafeMultiplier = computeMaxSafeMultiplier(pattern);
         long effective = Math.min(idealMultiplier, maxSafeMultiplier);
 
         return Math.max(1, effective);
+    }
+
+    /**
+     * Returns true if ANY stack (input or output) has size &lt;= 0.
+     * Fluid patterns use IAEItemStack placeholders with size=0, and
+     * scaling them (0 * N = 0) breaks AE2's perCraftAmount division.
+     */
+    public static boolean hasZeroSizeStacks(ICraftingPatternDetails pattern) {
+        IAEItemStack[] inputs = pattern.getCondensedInputs();
+        if (inputs != null) {
+            for (IAEItemStack stack : inputs) {
+                if (stack != null && stack.getStackSize() <= 0) return true;
+            }
+        }
+        IAEItemStack[] outputs = pattern.getCondensedOutputs();
+        if (outputs != null) {
+            for (IAEItemStack stack : outputs) {
+                if (stack != null && stack.getStackSize() <= 0) return true;
+            }
+        }
+        return false;
     }
 
     public static long computeMaxSafeMultiplier(ICraftingPatternDetails pattern) {
