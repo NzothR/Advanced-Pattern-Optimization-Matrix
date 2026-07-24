@@ -8,7 +8,10 @@ import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
 
 /**
- * Scaled pattern wrapper. equals/hashCode now properly includes multiplier.
+ * Scaled pattern wrapper. Does NOT cache scaled arrays — AE2's crafting engine
+ * mutates returned stacks in-place (e.g. setting size to 0 during subtraction),
+ * so caching would return stale/zeroed data and cause {@code / by zero} in
+ * {@code CraftFromPatternTask.calculateOneStep}.
  */
 public class ScaledPatternDetails implements ICraftingPatternDetails {
 
@@ -16,11 +19,6 @@ public class ScaledPatternDetails implements ICraftingPatternDetails {
 
     private final ICraftingPatternDetails original;
     private final long multiplier;
-
-    private volatile IAEItemStack[] cachedInputs;
-    private volatile IAEItemStack[] cachedCondensedInputs;
-    private volatile IAEItemStack[] cachedOutputs;
-    private volatile IAEItemStack[] cachedCondensedOutputs;
 
     public ScaledPatternDetails(ICraftingPatternDetails original, long multiplier) {
         this.original = original;
@@ -37,42 +35,22 @@ public class ScaledPatternDetails implements ICraftingPatternDetails {
 
     @Override
     public IAEItemStack[] getInputs() {
-        if (cachedInputs == null) {
-            synchronized (this) {
-                if (cachedInputs == null) cachedInputs = scale(original.getInputs());
-            }
-        }
-        return cachedInputs;
+        return scale(original.getInputs());
     }
 
     @Override
     public IAEItemStack[] getCondensedInputs() {
-        if (cachedCondensedInputs == null) {
-            synchronized (this) {
-                if (cachedCondensedInputs == null) cachedCondensedInputs = scale(original.getCondensedInputs());
-            }
-        }
-        return cachedCondensedInputs;
+        return scale(original.getCondensedInputs());
     }
 
     @Override
     public IAEItemStack[] getOutputs() {
-        if (cachedOutputs == null) {
-            synchronized (this) {
-                if (cachedOutputs == null) cachedOutputs = scale(original.getOutputs());
-            }
-        }
-        return cachedOutputs;
+        return scale(original.getOutputs());
     }
 
     @Override
     public IAEItemStack[] getCondensedOutputs() {
-        if (cachedCondensedOutputs == null) {
-            synchronized (this) {
-                if (cachedCondensedOutputs == null) cachedCondensedOutputs = scale(original.getCondensedOutputs());
-            }
-        }
-        return cachedCondensedOutputs;
+        return scale(original.getCondensedOutputs());
     }
 
     @Override
