@@ -10,7 +10,7 @@ import net.minecraftforge.common.config.Configuration;
 public final class APMConfig {
 
     public static boolean enabled = true;
-    public static boolean debugLog = true;
+    public static boolean debugLog = false;
 
     private APMConfig() {}
 
